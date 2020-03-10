@@ -18,7 +18,7 @@ const trx = {
         }],
         data: {
             from: 'benchqgmud23',
-            to: 'benchmvkiuw3',
+            to: 'bench3lk3hv4',
             quantity: '10.0000 SYS',
             memo: 'memo' + Math.random()
         }

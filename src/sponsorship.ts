@@ -76,6 +76,10 @@ export class Sponsorship {
         const buffer = this.buffers[this.nextKey];
         const sponsor = this.sponsors[this.nextKey];
 
+        this.nextKey++;
+        if (this.nextKey == this.sponsors.length)
+            this.nextKey = 0;
+
         const extended = {
             ...transaction,
             transaction_extensions: [{
