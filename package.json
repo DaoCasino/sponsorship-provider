@@ -1,0 +1,34 @@
+{
+  "name": "sponsorship-provider",
+  "version": "1.0.0",
+  "description": "Tool that provides sponsorship to EOS transactions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "debug": "ts-node-dev src/server.ts",
+    "example": "ts-node-dev example.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DaoCasino/sponsorship-provider.git"
+  },
+  "author": "mixbytes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DaoCasino/sponsorship-provider/issues"
+  },
+  "homepage": "https://github.com/DaoCasino/sponsorship-provider#readme",
+  "dependencies": {
+    "@types/express": "^4.17.3",
+    "eosjs": "^20.0.3",
+    "eosjs-ecc": "^4.0.7",
+    "express": "^4.17.1",
+    "node-eosjs-signature-provider": "^3.0.0",
+    "node-fetch": "^2.6.0",
+    "typescript": "^3.8.3"
+  },
+  "devDependencies": {
+    "ts-node": "^8.6.2",
+    "ts-node-dev": "^1.0.0-pre.44"
+  }
+}

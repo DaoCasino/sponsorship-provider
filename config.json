@@ -1,0 +1,9 @@
+{
+  "nodeUrl": "http://localhost:8888",
+  "sponsors": [
+    {
+      "account": "eosio",
+      "privateKey": "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
+    }
+  ]
+}
