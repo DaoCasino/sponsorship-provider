@@ -10,6 +10,5 @@ export type FullSponsor = {
 }
 
 export type Config = {
-    nodeUrl: string,
     sponsors: Sponsor[]
 }

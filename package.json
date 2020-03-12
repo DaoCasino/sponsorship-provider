@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "node dist/server.js",
     "debug": "ts-node-dev src/server.ts",
-    "example": "ts-node-dev example.ts"
+    "example": "ts-node-dev example/example.ts"
   },
   "repository": {
     "type": "git",
