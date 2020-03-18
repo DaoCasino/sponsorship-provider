@@ -14,6 +14,5 @@ export const server = createApp(config as Config).then(app => {
         console.log(
             `App is running at http://localhost:${port} in ${app.get("env")} mode`
         );
-        console.log("Press CTRL-C to stop\n");
     });
 });
