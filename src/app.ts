@@ -28,13 +28,14 @@ const createApp = async (config: Config) => {
     app.post("/sponsor", async (req, res) => {
         const {serializedTransaction, chainId} = req.body as { chainId: string, serializedTransaction: number[] };
 
-        if (!serializedTransaction || !chainId)
+        if (serializedTransaction === undefined || chainId === undefined) {
             return res.status(400).send(
                 {
                     error: "Request body should contain chainId (string) " +
                         "and serializedTransaction (number[] with UInt8 values)"
                 }
             );
+        }
 
         if (typeof chainId !== "string")
             return res.status(400).send(
