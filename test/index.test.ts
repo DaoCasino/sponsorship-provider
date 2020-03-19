@@ -14,7 +14,8 @@ describe('Service unit tests', () => {
                         account: "eosio",
                         privateKey: "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
                     }
-                ]
+                ],
+                chainId: "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
             }
         );
         request = supertest(app);
@@ -48,7 +49,8 @@ describe('Service unit tests', () => {
                             account: "test",
                             privateKey: "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD4"
                         },
-                    ]
+                    ],
+                    chainId: "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
                 }
             );
             expect(app).toBeNull();
@@ -68,15 +70,7 @@ describe('Service unit tests', () => {
     test("Invalid request body (serializedTransaction type)", async () => {
         const response = await request.post('/sponsor')
             .set('Content-Type', 'application/json')
-            .send(JSON.stringify({serializedTransaction: 10, chainId: ""}));
-        expect(response.status).toBe(400);
-    });
-
-    test("Invalid request body (chainId type)", async () => {
-        const response = await request.post('/sponsor')
-            .set('Content-Type', 'application/json')
-            .send(JSON.stringify({serializedTransaction: [10], chainId: 10}));
-
+            .send(JSON.stringify({serializedTransaction: 10}));
         expect(response.status).toBe(400);
     });
 

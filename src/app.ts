@@ -7,7 +7,7 @@ const ecc = require('eosjs-ecc');
 
 
 const createApp = async (config: Config) => {
-    const {sponsors} = config;
+    const {sponsors, filter} = config;
     const fullSponsors: FullSponsor[] = sponsors.map(sponsor => {
         if (!ecc.isValidPrivate(sponsor.privateKey)) {
             throw new Error(`The ${sponsor.privateKey} is not a valid private key`);
@@ -16,7 +16,7 @@ const createApp = async (config: Config) => {
     });
     const sponsorPublicKeys = fullSponsors.map(sponsor => sponsor.publicKey);
 
-    const sponsorship = await Sponsorship.create(fullSponsors);
+    const sponsorship = await Sponsorship.create(fullSponsors, filter, config.chainId);
 
     const app = express();
     app.use(bodyParser.json());
@@ -26,21 +26,7 @@ const createApp = async (config: Config) => {
     });
 
     app.post("/sponsor", async (req, res) => {
-        const {serializedTransaction, chainId} = req.body as { chainId: string, serializedTransaction: number[] };
-
-        if (serializedTransaction === undefined || chainId === undefined) {
-            return res.status(400).send(
-                {
-                    error: "Request body should contain chainId (string) " +
-                        "and serializedTransaction (number[] with UInt8 values)"
-                }
-            );
-        }
-
-        if (typeof chainId !== "string")
-            return res.status(400).send(
-                {error: "chainId should be string"}
-            );
+        const {serializedTransaction} = req.body as { serializedTransaction: number[] };
 
         if (!Array.isArray(serializedTransaction) || serializedTransaction.find(value => {
             return typeof value !== "number" || !Number.isInteger(value) || value < 0 || value > 255
@@ -51,7 +37,7 @@ const createApp = async (config: Config) => {
         }
 
         try {
-            const newTrx = await sponsorship.sign(serializedTransaction, chainId);
+            const newTrx = await sponsorship.sign(serializedTransaction);
             res.send({
                 signatures: newTrx.signatures,
                 serializedTransaction: Array.from(newTrx.serializedTransaction)

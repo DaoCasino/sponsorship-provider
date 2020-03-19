@@ -3,7 +3,9 @@ import fs from "fs";
 import {Config} from "./config";
 
 const configFile = process.argv[2] || "config.json";
-const config = JSON.parse(fs.readFileSync(configFile).toString());
+const configJson = fs.readFileSync(configFile).toString();
+const config = JSON.parse(configJson);
+
 
 export const server = createApp(config as Config).then(app => {
     /**

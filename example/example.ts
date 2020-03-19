@@ -26,6 +26,7 @@ const act = async () => {
     // Create serializedTransaction
     // Transact method fetches abi from the node and serializes transaction
     // Make sure it is not signed and not broadcasted
+    console.log(api.chainId);
     const serializedTrx = (await api.transact(
         {
             actions: [{

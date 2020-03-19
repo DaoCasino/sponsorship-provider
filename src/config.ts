@@ -1,3 +1,5 @@
+import {Filter} from "./filter";
+
 export type Sponsor = {
     account: string,
     privateKey: string,
@@ -10,5 +12,7 @@ export type FullSponsor = {
 }
 
 export type Config = {
-    sponsors: Sponsor[]
+    sponsors: Sponsor[],
+    chainId: string,
+    filter?: Filter
 }

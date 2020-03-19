@@ -3,6 +3,7 @@ import {SignatureProvider} from "eosjs/dist/eosjs-api-interfaces";
 import NodeEosjsSignatureProvider from "node-eosjs-signature-provider";
 import {Abi} from "eosjs/dist/eosjs-rpc-interfaces";
 import {FullSponsor} from "./config";
+import {filter, Filter} from "./filter";
 
 const {TextEncoder, TextDecoder} = require('util');
 
@@ -28,9 +29,11 @@ export class Sponsorship {
     private readonly api: Api;
     private readonly rpc: JsonRpc;
     private readonly sponsors: FullSponsor[];
+    private readonly filter?: Filter;
+    private readonly chainId: string;
     private nextKey = 0;
 
-    public static async create(sponsors: FullSponsor[]) {
+    public static async create(sponsors: FullSponsor[], filter: Filter | undefined, chainId: string) {
         const sponsorPrivateKeys = sponsors.map(sponsor => sponsor.privateKey);
         const signatureProvider = new NodeEosjsSignatureProvider(sponsorPrivateKeys);
         // The url and fetch will never be used, but need to be specified
@@ -42,19 +45,23 @@ export class Sponsorship {
             textEncoder: new TextEncoder()
         });
 
-        return new Sponsorship(sponsors, rpc, api, signatureProvider);
+        return new Sponsorship(sponsors, rpc, api, signatureProvider, filter, chainId);
     }
 
     private constructor(
         sponsors: FullSponsor[],
         rpc: JsonRpc,
         api: Api,
-        signatureProvider: SignatureProvider
+        signatureProvider: SignatureProvider,
+        filter: Filter | undefined,
+        chainId: string
     ) {
         this.rpc = rpc;
         this.api = api;
         this.sponsors = sponsors;
         this.signatureProvider = signatureProvider;
+        this.filter = filter;
+        this.chainId = chainId;
 
         const sponsorType = Serialize.getTypesFromAbi(this.api.abiTypes, extensionAbi as Abi).get('sponsor_ext');
         this.extensions = sponsors.map((sponsor) => {
@@ -67,6 +74,12 @@ export class Sponsorship {
         })
     }
 
+    private filterTransaction(transaction: any) {
+        if (this.filter)
+            return filter(transaction, this.filter);
+        return true;
+    }
+
     private deserializeTransaction(transaction: Uint8Array) {
         try {
             return this.api.deserializeTransaction(transaction);
@@ -75,11 +88,13 @@ export class Sponsorship {
         }
     }
 
-    public async sign(serializedTransaction: number[] | Uint8Array, chainId: string) {
+    public async sign(serializedTransaction: number[] | Uint8Array) {
         const inputTrx = Array.isArray(serializedTransaction) ?
             Uint8Array.from(serializedTransaction) : serializedTransaction;
 
         const inputTrxDes = this.deserializeTransaction(inputTrx);
+        if (!this.filterTransaction(inputTrxDes))
+            throw new Error("Transaction was filtered");
 
         const extension = this.extensions[this.nextKey];
         const sponsorPubKey = this.sponsors[this.nextKey].publicKey;
@@ -92,7 +107,7 @@ export class Sponsorship {
             requiredKeys: [sponsorPubKey],
             serializedTransaction: outputTrx,
             abis: [],
-            chainId
+            chainId: this.chainId
         });
     }
 }

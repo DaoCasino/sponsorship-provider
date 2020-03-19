@@ -2,5 +2,6 @@ example/
 node_modules/
 dist/
 test/
+coverage/
 
 config.json
