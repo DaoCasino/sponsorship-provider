@@ -61,6 +61,7 @@ const act = async () => {
         },
         body: JSON.stringify({
             serializedTransaction: Array.from(serializedTrx),
+            // serializedTransaction: [1,2,3],
             chainId: api.chainId
         }),
     })

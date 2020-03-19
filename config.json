@@ -6,11 +6,12 @@
       "privateKey": "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
     }
   ],
+  "logLevel": "no",
   "filter": {
     "ref_block_num": {
       "type": "fromTo",
       "from": 0,
-      "to": 99
+      "to": 99999999
     },
     "actions": {
       "account": {

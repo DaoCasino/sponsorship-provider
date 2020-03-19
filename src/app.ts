@@ -2,9 +2,10 @@ import express from "express";
 import bodyParser from "body-parser";
 import {Sponsorship} from "./sponsorship";
 import {Config, FullSponsor} from "./config";
+import expressWinston from "express-winston";
+import winston from "winston";
 
 const ecc = require('eosjs-ecc');
-
 
 const createApp = async (config: Config) => {
     const {sponsors, filter} = config;
@@ -20,6 +21,23 @@ const createApp = async (config: Config) => {
 
     const app = express();
     app.use(bodyParser.json());
+
+    expressWinston.responseWhitelist.push('body.error');
+    app.use(expressWinston.logger({
+        transports: [
+            new (winston.transports.Console)({level: config.logLevel})
+        ],
+        format: winston.format.combine(
+            winston.format.simple()
+        ),
+        expressFormat: true,
+        colorize: true,
+        statusLevels: {
+            success: "info",
+            warn: "warn",
+            error: "error"
+        }
+    }));
 
     app.get("/sponsors", (req, res) => {
         res.send(sponsorPublicKeys);
@@ -43,11 +61,16 @@ const createApp = async (config: Config) => {
                 serializedTransaction: Array.from(newTrx.serializedTransaction)
             });
         } catch (e) {
-            console.error(e);
-            res.status(500).send({error: e.message});
+            if (e.message === "Transaction was filtered") {
+                return res.status(400).send({error: e.message});
+            }
+            if (config.logLevel !== "no") {
+                // WTF, unknown error
+                console.error(e);
+            }
+            return res.status(500).send({error: e.message});
         }
     });
-
 
     return app;
 };

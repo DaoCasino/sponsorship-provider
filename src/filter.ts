@@ -74,8 +74,8 @@ const filterThrowable = (transaction: any, filter: Filter) => {
             localCheckFilter(action.data, filter.actions.data);
             if (filter.actions.authorizations && action.authorization) {
                 action.authorization.forEach((authorization: any) => {
-                    localCheckFilter(authorization.actor, filter.actions.authorizations.actor);
                     localCheckFilter(authorization.permission, filter.actions.authorizations.permission);
+                    localCheckFilter(authorization.actor, filter.actions.authorizations.actor);
                 })
             }
         })
