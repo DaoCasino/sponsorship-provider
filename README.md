@@ -1,14 +1,14 @@
-#Sponsorship provider
+# Sponsorship provider
 For DAOPlatform
 
-##What is it
+## What is it
 It is a nodejs server that receives serialized DAOBET transactions, adds sponsorship and signs them.
 
-##How to use
+## How to use
 First you need to build this
 
 
-##Benchmark
+## Benchmark
 This tool was benchmarked with apache benchmark. Configuration of machine was
 - Intel Core i5 5257U
 - 8gb ram
