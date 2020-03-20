@@ -10,11 +10,16 @@ services:
   - docker
 
 before_install:
-#  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - npm install
 
 script:
   - npm test
   - docker build . -t daocasino/sponsorship-provider:$TRAVIS_BRANCH
+  - |
+    if [ $TRAVIS_BRANCH == "master" ]; then
+      docker tag daocasino/sponsorship-provider:master daocasino/sponsorship-provider:latest
+      echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      docker push daocasino/sponsorship-provider:latest
+    fi
 
 
