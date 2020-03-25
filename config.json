@@ -17,6 +17,12 @@
       "account": {
         "type": "not",
         "values": ["testest", "lalala"]
+      },
+      "authorizations": {
+        "author": {
+          "type": "oneOf",
+          "values": ["bbbbbbbtoken", "bbbbbbbbfrom"]
+        }
       }
     }
   }
