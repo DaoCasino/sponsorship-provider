@@ -20,10 +20,9 @@ if (cluster.isMaster) {
     const config = JSON.parse(fs.readFileSync(configFile).toString());
 
     createApp(config as Config).then(app => {
-        const port = process.env.PORT || 3000;
-        return app.listen(port, () => {
+        return app.listen(config.port, () => {
             console.log(
-                `Cluster instance is running at http://localhost:${port} in ${app.get("env")} mode`
+                `Cluster instance is running at http://localhost:${config.port} in ${app.get("env")} mode`
             );
         });
     });
