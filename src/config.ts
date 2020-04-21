@@ -12,6 +12,7 @@ export type FullSponsor = {
 }
 
 export type Config = {
+    port: number,
     sponsors: Sponsor[],
     chainId: string,
     logLevel: "no" | "error" | "info" | "warn" | "debug",

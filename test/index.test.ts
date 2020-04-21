@@ -6,6 +6,7 @@ import {Config} from "../src/config";
 let request: supertest.SuperTest<supertest.Test>;
 
 const sampleConfig: Config = {
+    port: 8080,
     logLevel: "error",
     sponsors: [
         {
@@ -56,6 +57,7 @@ describe('Service unit tests', () => {
         try {
             const app = await createApp({
                     logLevel: "no",
+                    port: 8080,
                     sponsors: [
                         {
                             account: "eosio",

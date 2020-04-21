@@ -12,10 +12,9 @@ export const server = createApp(config).then(app => {
     /**
      * Start Express server.
      */
-    const port = process.env.PORT || 3000;
-    return app.listen(port, () => {
+    return app.listen(config.port, () => {
         console.log(
-            `App is running at ${port} port`
+            `App is running at ${config.port} port`
         );
     });
 });
