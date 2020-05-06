@@ -19,7 +19,7 @@ export type Config = {
     sponsors: Sponsor[],
     chainId: string,
     logLevel: "no" | "error" | "info" | "warn" | "debug",
-    filter?: Filter
+    filter: Filter
 }
 
 export const checkConfig = (config: any) => {
@@ -38,10 +38,10 @@ export const checkConfig = (config: any) => {
     if (!["no", "error", "info", "warn", "debug"].includes(config.logLevel))
         throw new Error("LogLevel should be one of [no, info, warn, debug]");
 
+    if (config.filter === undefined)
+        throw new Error("Config: Filter cannot be empty!");
 
     const filter = config.filter;
-    if (filter === undefined)
-        return;
 
     const ajv = new Ajv();
     const validate = ajv.compile(
