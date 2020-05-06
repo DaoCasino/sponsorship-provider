@@ -1,4 +1,7 @@
 import {Filter} from "./filter";
+import Ajv from "ajv";
+import * as path from "path";
+import * as fs from "fs";
 
 export type Sponsor = {
     account: string,
@@ -39,5 +42,16 @@ export const checkConfig = (config: any) => {
     const filter = config.filter;
     if (filter === undefined)
         return;
-    // TODO: add filter type check
+
+    const ajv = new Ajv();
+    const validate = ajv.compile(
+        JSON.parse(fs.readFileSync(path.resolve(__dirname, "../schemas/filter.json")).toString()),
+    );
+
+    const valid = validate(filter);
+    if (!valid) {
+        let err = "Cannot start app: filter error. Please check your filter in configuration.\n";
+        err += validate.errors.map(err => JSON.stringify(err)).reduce((acc: string, cur: string) => `${acc}\n${cur}`);
+        throw new Error(err);
+    }
 };

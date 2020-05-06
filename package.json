@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --coverage",
-    "build": "tsc",
+    "build-schema": "mkdirp schemas && typescript-json-schema tsconfig.json Filter -o ./schemas/filter.json --noExtraProps",
+    "build": "tsc && npm run build-schema",
     "start": "node dist/server.js",
     "cluster": "node dist/cluster.js",
     "debug": "ts-node-dev src/server.ts",
@@ -26,6 +27,7 @@
     "@types/jest": "^25.1.4",
     "@types/source-map-support": "^0.5.1",
     "@types/supertest": "^2.0.8",
+    "ajv": "^6.12.2",
     "eosjs": "^20.0.3",
     "eosjs-ecc": "^4.0.7",
     "express": "^4.17.1",
@@ -37,6 +39,7 @@
     "supertest": "^4.0.2",
     "ts-jest": "^25.2.1",
     "typescript": "^3.8.3",
+    "typescript-json-schema": "^0.42.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
