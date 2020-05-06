@@ -7,6 +7,8 @@ import {filter, Filter} from "./filter";
 
 const {TextEncoder, TextDecoder} = require('util');
 
+const TRX_EXTENSION_TYPE = 0;
+
 const extensionAbi = {
     "version": "eosio::abi/1.0",
     "structs": [
@@ -23,11 +25,17 @@ const extensionAbi = {
     ],
 };
 
+export class FilteredError extends Error {
+    constructor(m: string) {
+        super(m);
+        Object.setPrototypeOf(this, FilteredError.prototype);
+    }
+}
+
 export class Sponsorship {
     private readonly signatureProvider: SignatureProvider;
     private readonly extensions: { data: string; type: number }[];
     private readonly api: Api;
-    private readonly rpc: JsonRpc;
     private readonly sponsors: FullSponsor[];
     private readonly filter?: Filter;
     private readonly chainId: string;
@@ -36,27 +44,25 @@ export class Sponsorship {
     public static async create(sponsors: FullSponsor[], filter: Filter | undefined, chainId: string) {
         const sponsorPrivateKeys = sponsors.map(sponsor => sponsor.privateKey);
         const signatureProvider = new NodeEosjsSignatureProvider(sponsorPrivateKeys);
+
         // The url and fetch will never be used, but need to be specified
-        const rpc = new JsonRpc("");
         const api = new Api({
-            rpc: rpc,
+            rpc: new JsonRpc(""),
             signatureProvider: signatureProvider,
             textDecoder: new TextDecoder(),
             textEncoder: new TextEncoder()
         });
 
-        return new Sponsorship(sponsors, rpc, api, signatureProvider, filter, chainId);
+        return new Sponsorship(sponsors, api, signatureProvider, filter, chainId);
     }
 
     private constructor(
         sponsors: FullSponsor[],
-        rpc: JsonRpc,
         api: Api,
         signatureProvider: SignatureProvider,
         filter: Filter | undefined,
         chainId: string
     ) {
-        this.rpc = rpc;
         this.api = api;
         this.sponsors = sponsors;
         this.signatureProvider = signatureProvider;
@@ -68,7 +74,7 @@ export class Sponsorship {
             const buffer = new Serialize.SerialBuffer({textEncoder: new TextEncoder(), textDecoder: new TextDecoder()});
             sponsorType.serialize(buffer, {"sponsor": sponsor.account});
             return {
-                type: 0,
+                type: TRX_EXTENSION_TYPE,
                 data: Serialize.arrayToHex(buffer.asUint8Array())
             }
         })
@@ -94,7 +100,7 @@ export class Sponsorship {
 
         const inputTrxDes = this.deserializeTransaction(inputTrx);
         if (!this.filterTransaction(inputTrxDes))
-            throw new Error("Transaction was filtered");
+            throw new FilteredError("Transaction was filtered");
 
         const extension = this.extensions[this.nextKey];
         const sponsorPubKey = this.sponsors[this.nextKey].publicKey;
