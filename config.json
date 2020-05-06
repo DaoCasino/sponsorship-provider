@@ -1,6 +1,6 @@
 {
   "chainId": "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f",
-  "port": 3333,
+  "port": 8080,
   "sponsors": [
     {
       "account": "eosio",
@@ -12,8 +12,7 @@
     "ref_block_num": {
       "type": "fromTo",
       "from": 0,
-      "to": 99999999,
-      "mwef": 3
+      "to": 99999999
     },
     "actions": {
       "account": {
