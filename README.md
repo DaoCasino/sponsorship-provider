@@ -7,6 +7,9 @@ It is a nodejs server that receives serialized DAOBET transactions, adds sponsor
 ## How to use
 First you need to build this
 
+## :warning: Security Varning
+Sponsorship provider signs transaction with provieded active keys!
+Please use filters anytime you start this app!
 
 ## Benchmark
 This tool was benchmarked with apache benchmark. Configuration of machine was

@@ -13,6 +13,7 @@ before_install:
   - npm install
 
 script:
+  - npm run build
   - npm test
   - docker build . -t daocasino/sponsorship-provider:$TRAVIS_BRANCH
   - |

@@ -20,7 +20,7 @@
         "values": ["testest", "lalala"]
       },
       "authorizations": {
-        "author": {
+        "actor": {
           "type": "oneOf",
           "values": ["bbbbbbbtoken", "bbbbbbbbfrom"]
         }
