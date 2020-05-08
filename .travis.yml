@@ -15,16 +15,14 @@ services:
 before_install:
   - npm install
 
+before_script:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
 script:
   - npm test
   - docker build . -t $IMG_NAME:$TRAVIS_BRANCH
   - |
-    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     docker push $IMG_NAME:$TRAVIS_BRANCH
-    if [ $TRAVIS_TAG != "" ]; then
-      docker tag $IMG_NAME:$TRAVIS_BRANCH $IMG_NAME:$TRAVIS_TAG
-      docker push $IMG_NAME:$TRAVIS_TAG
-    fi
     if [ $TRAVIS_BRANCH == "master" ]; then
       docker tag $IMG_NAME:master $IMG_NAME:latest
       docker push $IMG_NAME:latest
