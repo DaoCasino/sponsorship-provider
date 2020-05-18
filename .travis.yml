@@ -6,20 +6,25 @@ node_js:
 git:
   depth: false
 
+env:
+  - IMG_NAME=daocasino/sponsorship-provider
+
 services:
   - docker
 
 before_install:
   - npm install
 
+before_script:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
 script:
+  - npm run build
   - npm test
-  - docker build . -t daocasino/sponsorship-provider:$TRAVIS_BRANCH
+  - docker build . -t $IMG_NAME:$TRAVIS_BRANCH
   - |
+    docker push $IMG_NAME:$TRAVIS_BRANCH
     if [ $TRAVIS_BRANCH == "master" ]; then
-      docker tag daocasino/sponsorship-provider:master daocasino/sponsorship-provider:latest
-      echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      docker push daocasino/sponsorship-provider:latest
+      docker tag $IMG_NAME:master $IMG_NAME:latest
+      docker push $IMG_NAME:latest
     fi
-
-

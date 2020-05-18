@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import {Sponsorship} from "./sponsorship";
+import {FilteredError, Sponsorship} from "./sponsorship";
 import {Config, FullSponsor} from "./config";
 import expressWinston from "express-winston";
 import winston from "winston";
@@ -43,6 +43,10 @@ const createApp = async (config: Config) => {
         res.send(sponsorPublicKeys);
     });
 
+    app.get("/ping", (req, res) => {
+        res.sendStatus(200);
+    })
+
     app.post("/sponsor", async (req, res) => {
         const {serializedTransaction} = req.body as { serializedTransaction: number[] };
 
@@ -61,11 +65,9 @@ const createApp = async (config: Config) => {
                 serializedTransaction: Array.from(newTrx.serializedTransaction)
             });
         } catch (e) {
-            if (e.message === "Transaction was filtered") {
+            if (e instanceof FilteredError)
                 return res.status(400).send({error: e.message});
-            }
             if (config.logLevel !== "no") {
-                // WTF, unknown error
                 console.error(e);
             }
             return res.status(500).send({error: e.message});
