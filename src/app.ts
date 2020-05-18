@@ -43,6 +43,10 @@ const createApp = async (config: Config) => {
         res.send(sponsorPublicKeys);
     });
 
+    app.get("/ping", (req, res) => {
+        res.sendStatus(200);
+    })
+
     app.post("/sponsor", async (req, res) => {
         const {serializedTransaction} = req.body as { serializedTransaction: number[] };
 

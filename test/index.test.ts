@@ -50,6 +50,12 @@ describe('Service unit tests', () => {
         expect(response.text).toBe('["EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"]');
     });
 
+    test("Ping", async () => {
+        const response = await request.get('/ping');
+
+        expect(response.status).toBe(200);
+    });
+
     test("Sign sample transaction", async () => {
         await sampleRequest(request);
     });
