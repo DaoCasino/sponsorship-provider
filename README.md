@@ -5,7 +5,15 @@ For DAOPlatform
 It is a nodejs server that receives serialized DAOBET transactions, adds sponsorship and signs them.
 
 ## How to use
-First you need to build this
+First, build with ```npm run build```.
+
+Single-core mode: ```npm run start```
+
+Multi-core mode: ```npm run cluster```
+
+## Config
+You can provide config using `config.json` file or via `SPONSOR_CONFIG` environment variable containing 
+stringifyed json with config.
 
 ## :warning: Security Varning
 Sponsorship provider signs transaction with provieded active keys!

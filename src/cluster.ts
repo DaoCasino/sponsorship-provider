@@ -1,8 +1,6 @@
 import cluster from "cluster";
 import {cpus} from "os";
-import fs from "fs";
-import createApp from "./app";
-import {Config} from "./config";
+import {startServer} from "./server";
 
 const numCPUs = cpus().length;
 
@@ -16,14 +14,11 @@ if (cluster.isMaster) {
         console.log(`worker ${worker.process.pid} died`);
     });
 } else {
-    const configFile = process.argv[2] || "config.json";
-    const config = JSON.parse(fs.readFileSync(configFile).toString());
-
-    createApp(config as Config).then(app => {
-        return app.listen(config.port, () => {
-            console.log(
-                `Cluster instance is running at http://localhost:${config.port} in ${app.get("env")} mode`
-            );
-        });
+    startServer().then((server) => {
+        const addr = server.address();
+        if (typeof addr === "string")
+            console.log(`Cluster instance is running at ${addr}`)
+        else
+            console.log(`Cluster instance is running at ${addr.port} port`)
     });
 }

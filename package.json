@@ -7,9 +7,9 @@
     "test": "jest --coverage",
     "build-schema": "mkdirp schemas && typescript-json-schema tsconfig.json Filter -o ./schemas/filter.json --noExtraProps",
     "build": "tsc && npm run build-schema",
-    "start": "node dist/server.js",
+    "start": "node dist/single.js",
     "cluster": "node dist/cluster.js",
-    "debug": "ts-node-dev src/server.ts",
+    "debug": "ts-node-dev src/single.ts",
     "example": "ts-node-dev example/example.ts"
   },
   "repository": {
