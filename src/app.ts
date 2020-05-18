@@ -64,7 +64,6 @@ const createApp = async (config: Config) => {
             if (e instanceof FilteredError)
                 return res.status(400).send({error: e.message});
             if (config.logLevel !== "no") {
-                // WTF, unknown error
                 console.error(e);
             }
             return res.status(500).send({error: e.message});
