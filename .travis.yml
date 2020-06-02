@@ -9,6 +9,7 @@ git:
 env:
   global:
     - IMG_NAME=daocasino/sponsorship-provider
+    - IMG_TAG=${TRAVIS_TAG:-${TRAVIS_BRANCH}-${TRAVIS_COMMIT:0:5}}
 
 environments:
   - &DEV_ENV
