@@ -29,18 +29,15 @@ jobs:
   include:
     - stage: build & push
       script:
-	- npm run build
-	- npm test
-	- docker build . -t $IMG_NAME:$TRAVIS_BRANCH
-	- |
-	  docker push $IMG_NAME:$TRAVIS_BRANCH
-	  if [ $TRAVIS_BRANCH == "master" ]; then
-	    docker tag $IMG_NAME:master $IMG_NAME:latest
-	    docker push $IMG_NAME:latest
-	  fi
+        - npm run build
+        - npm test
+        - docker build . -t $IMG_NAME:$IMG_TAG
+        - docker push $IMG_NAME:$IMG_TAG
     - stage: deploy
-      if: branch = develop
       env:
         - *DEV_ENV
       script:
-        - docker run -e AWS_DEFAULT_REGION -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY silintl/ecs-deploy:latest -c platform-dev -n sponsorship -i $IMG_NAME:latest
+        |
+        if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_BRANCH" == "develop" ]]; then
+          docker run -e AWS_DEFAULT_REGION -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY silintl/ecs-deploy:latest -c platform-dev -n sponsorship -i $IMG_NAME:$IMG_TAG
+        fi
