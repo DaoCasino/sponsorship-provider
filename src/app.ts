@@ -117,10 +117,10 @@ const createApp = async (config: Config) => {
             name: `${SERVICE_PREFIX}http_${handler}_ms`,
             help: 'response durations',
             buckets: RESP_TIME_BUCKETS,
-            labelNames: [RESP_CODE_LABEL]
+            labelNames: [RESP_CODE_LABEL],
+            registers: [register]
         });
         responseCodeHistograms.set(handler, histogram);
-        register.registerMetric(histogram);
     })
 
     client.collectDefaultMetrics({register, prefix: SERVICE_PREFIX});
