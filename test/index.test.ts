@@ -56,6 +56,13 @@ describe('Service unit tests', () => {
         expect(response.status).toBe(200);
     });
 
+    test("Metrics", async () => {
+        const response = await request.get('/metrics');
+
+        expect(response.status).toBe(200);
+    });
+
+
     test("Sign sample transaction", async () => {
         await sampleRequest(request);
     });
