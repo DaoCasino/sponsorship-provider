@@ -30,7 +30,7 @@
     "ajv": "^6.12.2",
     "eosjs": "^20.0.3",
     "eosjs-ecc": "^4.0.7",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-winston": "^4.0.3",
     "jest": "^25.1.0",
     "node-eosjs-signature-provider": "^3.0.0",
